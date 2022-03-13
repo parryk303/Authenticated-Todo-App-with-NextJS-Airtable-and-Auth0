@@ -6,11 +6,8 @@ import { TodosContext } from '../contexts/TodosContext';
 import TodoForm from '../compenents/TodoForm';
 import auth0 from './api/utils/auth0';
 
-export default function Home({ initialTodos, user }) {
-    const { todos, setTodos } = useContext(TodosContext);
-    useEffect(() => {
-        setTodos(initialTodos);
-    }, []);
+export default function Home({ user }) {
+    
 
     return (
         <div className="max-w-xl m-auto p-2">
@@ -49,10 +46,7 @@ export default function Home({ initialTodos, user }) {
                     <>
                         <TodoForm />
                         <ul>
-                            {todos &&
-                                todos.map((todo) => (
-                                    <Todo todo={todo} key={todo.id} />
-                                ))}
+                            
                         </ul>
                     </>
                 ) : (
@@ -68,14 +62,14 @@ export default function Home({ initialTodos, user }) {
 export async function getServerSideProps(context) {
     const session = await auth0.getSession(context.req);
     let todos = [];
-    if (session?.user) {
-        todos = await table
-            .select({ filterByFormula: `userId = '${session.user.sub}'` })
-            .firstPage();
-    }
+    // if (session?.user) {
+    //     todos = await table
+    //         .select({ filterByFormula: `userId = '${session.user.sub}'` })
+    //         .firstPage();
+    // }
     return {
         props: {
-            initialTodos: minifyRecords(todos),
+            // initialTodos: minifyRecords(todos),
             user: session?.user || null,
         },
     };
